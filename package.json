@@ -1,0 +1,22 @@
+{
+  "name": "smp-mainlocalserver",
+  "version": "1.0.0",
+  "description": "Main Local Server for Smart Home Project by stevestrz",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/steve-strz/smp-mainlocalserver.git"
+  },
+  "author": "stevestrz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/steve-strz/smp-mainlocalserver/issues"
+  },
+  "homepage": "https://github.com/steve-strz/smp-mainlocalserver#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
