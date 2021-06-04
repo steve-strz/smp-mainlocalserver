@@ -1,10 +1,11 @@
 {
   "name": "smp-mainlocalserver",
   "version": "1.0.0",
+  "type": "module",
   "description": "Main Local Server for Smart Home Project by stevestrz",
   "main": "index.js",
   "scripts": {
-    "start": "npm run index.js"
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,8 @@
   },
   "homepage": "https://github.com/steve-strz/smp-mainlocalserver#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.12"
   }
 }

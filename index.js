@@ -1,10 +1,19 @@
-const express = require('express');
-const app = express();
+import express from 'express';
+import api from './api.js';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const PORT = 8081;
-const api = require('./api');
 
-app.use(api);
-
-app.listen(PORT, () => {
-   console.log(`Main Local Server running at : http://localhost:${PORT}`);
-});
+mongoose
+   .connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true})
+   .then(() => {
+      const app = express();
+      app.use(express.json());
+      app.use('/api', api);
+      app.listen(PORT, () => {
+         console.log(`Main Local Server running at : http://localhost:${PORT}`);
+      });
+   });
