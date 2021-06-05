@@ -13,7 +13,7 @@ mongoose
       const app = express();
       app.use(express.json());
       app.use('/api', api);
-      app.listen(PORT, () => {
+      app.listen(PORT, '0.0.0.0', () => {
          console.log(`Main Local Server running at : http://localhost:${PORT}`);
       });
    });
