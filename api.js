@@ -27,18 +27,13 @@ router.post('/sensors', async (req, res) => {
    }   
 });
 
-// router.delete('/sensors/:filter', async (req, res) => {
-//    if(req.params.filter == "all") await Sensor.deleteMany({});
-//    else console.log("what ?");
-//    res.send(200);
-// }); 
-
 router.put('/sensors/:mac_address', async (req, res) => {
    let response = await Sensor.findOneAndUpdate(
       {macAddress: req.params.mac_address},
       {value: req.body.value}
    );
    if(!response) res.send(500);
+   console.log("[i] Sensor " + response.name + " value updated");
    res.sendStatus(200);
 });
 

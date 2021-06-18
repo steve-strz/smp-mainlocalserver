@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const PORT = 8081;
+const PORT = 3306;
 
 mongoose
    .connect(process.env.DATABASE_URL, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -13,7 +13,7 @@ mongoose
       const app = express();
       app.use(express.json());
       app.use('/api', api);
-      app.listen(PORT, '0.0.0.0', () => {
+      app.listen(PORT, '192.168.0.34', () => {
          console.log(`Main Local Server running at : http://localhost:${PORT}`);
       });
    });
