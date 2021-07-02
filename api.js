@@ -9,6 +9,7 @@ router.get('/', (req, res) => {
 //SENSORS
 
 router.get('/sensors', async (req, res) => {
+   console.log("/api/sensors called");
    const sensors = await Sensor.find();
    res.send(200, sensors);
 });
@@ -32,9 +33,17 @@ router.put('/sensors/:mac_address', async (req, res) => {
       {macAddress: req.params.mac_address},
       {value: req.body.value}
    );
-   if(!response) res.send(500);
+   if(!response) res.sendStatus(500);
    console.log("[i] Sensor " + response.name + " value updated");
    res.sendStatus(200);
 });
+
+router.get('/sensors/:mac_address', async (req,res) => {
+   const sensor = await Sensor.findOne({
+      macAddress: req.params.mac_address
+   })
+   console.log(sensor);
+   res.send(200, sensor);
+})
 
 export default router;
