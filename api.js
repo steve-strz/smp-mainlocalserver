@@ -1,5 +1,6 @@
 import express from 'express';
 import Sensor from './models/sensor.js'
+import btManager from './scripts/bluetooth/bluetoothManager.js'
 var router = express.Router();
 
 router.get('/', (req, res) => {
@@ -44,6 +45,11 @@ router.get('/sensors/:mac_address', async (req,res) => {
    })
    console.log(sensor);
    res.send(200, sensor);
+})
+
+router.get('/bluetooth/list', async(req, res) => {
+   btManager.enableBluetooth();
+   res.send(200);
 })
 
 export default router;
