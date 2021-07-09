@@ -57,4 +57,10 @@ router.get('/bluetooth/off', async(req, res) => {
    res.send(200);
 })
 
+router.get('/bluetooth/scan', async(req, res) => {
+   btManager.scanDevices();
+   res.send(200);
+})
+
+
 export default router;

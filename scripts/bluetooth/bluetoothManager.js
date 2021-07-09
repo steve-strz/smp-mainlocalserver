@@ -19,4 +19,13 @@ export default {
       }
     });
   },
+  async scanDevices(){
+    exec('sudo bluetoothctl scan on', (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(stdout);
+      }
+    })
+  }
 }
