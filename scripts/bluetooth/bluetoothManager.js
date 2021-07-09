@@ -25,6 +25,10 @@ export default {
     child.stdout.setEncoding('utf8');
     child.stdout.on('data', (data) => {
       console.log('new device: ' + data);
-    })
+    });
+    child.stderr.setEncoding('utf8')
+    child.stderr.on('data', (data) => {
+      console.log('error : ' + data);
+    })   
   }
 }
