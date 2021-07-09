@@ -2,14 +2,21 @@ import { exec } from 'child_process';
 
 export default {
   async enableBluetooth(){
-    exec('ls', (err, stdout, stderr) => {
+    exec('systemctl start bluetooth', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
       } else {
-        for (let line of stdout.split("\n")) {
-          console.log(`ls: ${line}`);
-        }
+        console.log("[i] Bluetooth enabled");
       }
     });
-  }
+  },
+  async disableBluetooth(){
+    exec('systemctl stop bluetooth', (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("[i] Bluetooth disabled");
+      }
+    });
+  },
 }
