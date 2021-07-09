@@ -21,14 +21,11 @@ export default {
     });
   },
   async scanDevices(){
-    let child = spawn('sudo bluetoothctl scan on');
-    child.stdout.setEncoding('utf8');
-    child.stdout.on('data', (data) => {
-      console.log('new device: ' + data);
-    });
-    child.stderr.setEncoding('utf8')
-    child.stderr.on('data', (data) => {
-      console.log('error : ' + data);
-    })   
+    let bluetoothctl = spawn('sudo bluetoothctl');
+    bluetoothctl.stdout.setEncoding('utf8');
+    bluetoothctl.stdin.write("scan on");
+    bluetoothctl.stdout.on('data', (data) => {
+      console.log(data);
+    })
   }
 }
