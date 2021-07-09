@@ -47,8 +47,13 @@ router.get('/sensors/:mac_address', async (req,res) => {
    res.send(200, sensor);
 })
 
-router.get('/bluetooth/list', async(req, res) => {
+router.get('/bluetooth/on', async(req, res) => {
    btManager.enableBluetooth();
+   res.send(200);
+})
+
+router.get('/bluetooth/off', async(req, res) => {
+   btManager.disableBluetooth();
    res.send(200);
 })
 
