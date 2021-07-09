@@ -1,4 +1,5 @@
 import { exec } from 'child_process';
+import { spawn } from 'child_process';
 
 export default {
   async enableBluetooth(){
@@ -20,12 +21,10 @@ export default {
     });
   },
   async scanDevices(){
-    exec('sudo bluetoothctl scan on', (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(stdout);
-      }
+    let child = spawn('sudo bluetoothctl scan on');
+    child.stdout.setEncoding('utf8');
+    child.stdout.on('data', (data) => {
+      console.log('new device: ' + data);
     })
   }
 }
