@@ -21,6 +21,12 @@ export default {
     });
   },
   async scanDevices(){
-    	let searchDevices = spawn('./searchDevices.sh');
+    exec('./searchDevices.sh', (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("[i] Script started : searchDevices.sh");
+      }
+    })
   }
 }
