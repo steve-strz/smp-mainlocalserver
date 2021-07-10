@@ -23,7 +23,7 @@ export default {
     });
   },
   async scanDevices(){
-    console.log(cwd);
+    console.log(this.cwd);
     exec('./searchDevices.sh', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
