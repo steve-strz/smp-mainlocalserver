@@ -1,6 +1,8 @@
 import { exec } from 'child_process';
 import { spawn } from 'child_process';
 
+let cwd = process.cwd();
+
 export default {
   async enableBluetooth(){
     exec('sudo systemctl start bluetooth', (err, stdout, stderr) => {
@@ -21,9 +23,7 @@ export default {
     });
   },
   async scanDevices(){
-    exec('pwd', (err, stdout, stderr) => {
-      console.log(stdout);
-    });
+    console.log(cwd);
     exec('./searchDevices.sh', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
