@@ -21,7 +21,9 @@ export default {
     });
   },
   async scanDevices(){
-    exec('pwd');
+    exec('pwd', (err, stdout, stderr) => {
+      console.log(stdout);
+    });
     exec('./searchDevices.sh', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
