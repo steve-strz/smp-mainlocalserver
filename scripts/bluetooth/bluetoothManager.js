@@ -21,23 +21,6 @@ export default {
     });
   },
   async scanDevices(){
-    try{
-    	let bluetoothctl = spawn('bluetoothctl', ['--', 'scan', 'on']);
-	bluetoothctl.stdout.setEncoding('utf8');
-	bluetoothctl.stdout.on('data', (data) => {
-	  console.log(data);
-	});
-	bluetoothctl.stderr.on('data', (err) => {
-	  console.log(err);
-	});
-	bluetoothctl.on('error', (err) => {
-	  console.log(err);
-	});
-	bluetoothctl.on('close', (code) => {
-	  console.log('code erreur :', code);
-	});
-    }catch(e){
-	console.log(e);
-    }
+    	let searchDevices = spawn('./searchDevices.sh');
   }
 }
