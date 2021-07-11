@@ -1,5 +1,6 @@
 import { exec } from 'child_process';
 import { spawn } from 'child_process';
+import { raw } from 'express';
 
 let cwd = process.cwd();
 
@@ -23,19 +24,21 @@ export default {
     });
   },
   async scanDevices(){
-    console.log("[i] Starting script : searchDevices.sh");
-    let child = exec(process.cwd() + '/scripts/bluetooth/searchDevices.sh', (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("[i] Script exited with no errors : searchDevices.sh");
-      }
+    return new Promise((resolve, reject) => {
+      console.log("[i] Starting script : searchDevices.sh");
+      let child = exec(process.cwd() + '/scripts/bluetooth/searchDevices.sh', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          console.log("[i] Script exited with no errors : searchDevices.sh");
+        }
+      });
+      child.on('exit', async () => {
+        let rawDevicesList = await this.getDevices();
+        resolve(rawDevicesList);
+      }) 
     });
-    child.on('exit', async () => {
-      let rawDevicesList = await this.getDevices()
-      console.log("2");
-      return rawDevicesList;
-    }) 
   },
   async removeDevices(){
     console.log("[i] Starting script : removeDevices.sh");
@@ -58,12 +61,22 @@ export default {
     })
   },
   async getDevices(){
-    exec("bluetoothctl devices", (err, stdout, stderr) => {
-      if(err){
-        console.log(err);
-      }else{
-        return stdout;
-      }
+    return new Promise((resolve, reject) => {
+      exec("bluetoothctl devices", (err, stdout, stderr) => {
+        if(err){
+          console.log(err);
+          reject(err);
+        }else{
+          resolve(stdout);
+        }
+      })
+    });
+  },
+  test(){
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve("yeah");
+      }, 5000)
     })
   }
 };
