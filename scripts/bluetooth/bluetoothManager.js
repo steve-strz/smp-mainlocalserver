@@ -23,13 +23,48 @@ export default {
     });
   },
   async scanDevices(){
-    console.log(process.cwd());
-    exec('./searchDevices.sh', (err, stdout, stderr) => {
+    console.log("[i] Starting script : searchDevices.sh");
+    let child = exec(process.cwd() + '/scripts/bluetooth/searchDevices.sh', (err, stdout, stderr) => {
       if (err) {
         console.log(err);
       } else {
-        console.log("[i] Script started : searchDevices.sh");
+        console.log("[i] Script exited with no errors : searchDevices.sh");
+      }
+    });
+    child.on('exit', async () => {
+      let rawDevicesList = await this.getDevices()
+      console.log("2");
+      return rawDevicesList;
+    }) 
+  },
+  async removeDevices(){
+    console.log("[i] Starting script : removeDevices.sh");
+    exec(process.cwd() + '/scripts/bluetooth/removeDevices.sh', (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("[i] Script exited with no errors : removeDevices.sh");
+      }
+    })
+  },
+  async addDevice(mac_address){
+    console.log("[i] Starting script : pairDevice.sh");
+    exec(process.cwd() + '/scripts/bluetooth/pairDevice.sh ' + mac_address, (err, stdout, stderr) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("[i] Script exited with no errors : addDevice.sh");
+      }
+    })
+  },
+  async getDevices(){
+    exec("bluetoothctl devices", (err, stdout, stderr) => {
+      if(err){
+        console.log(err);
+      }else{
+        return stdout;
       }
     })
   }
-}
+};
+

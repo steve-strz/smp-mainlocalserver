@@ -57,10 +57,26 @@ router.get('/bluetooth/off', async(req, res) => {
    res.send(200);
 })
 
+/*router.get('/bluetooth/scan', async(req, res) => {
+   let rawDevicesList = await btManager.scanDevices();
+   console.log("attend stp :", rawDevicesList);
+   res.send(200);
+})*/
+
 router.get('/bluetooth/scan', async(req, res) => {
-   btManager.scanDevices();
+   let rawDevicesList = await btManager.scanDevices();
+   console.log("attend stp :", rawDevicesList);
    res.send(200);
 })
 
+router.get('/bluetooth/removeall', async(req, res) => {
+   btManager.removeDevices();
+   res.send(200);
+})
+
+router.get('/bluetooth/pair/:mac_address', async(req, res) => {
+   btManager.addDevice(req.params.mac_address);
+   res.send(200);
+})
 
 export default router;
