@@ -1,29 +1,50 @@
 import { exec } from 'child_process';
-import { spawn } from 'child_process';
-import { raw } from 'express';
-
-let cwd = process.cwd();
 
 export default {
   async enableBluetooth(){
-    exec('sudo systemctl start bluetooth', (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("[i] Bluetooth enabled");
-      }
-    });
+    return new Promise((resolve, reject) => {
+      exec('sudo systemctl start bluetooth', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+          reject({state: 'error', error: err})
+        } else{
+          console.log("[i] Bluetooth enabled");
+          resolve({state: 'enable'});
+        }
+      });
+    })
   },
   async disableBluetooth(){
-    exec('sudo systemctl stop bluetooth', (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("[i] Bluetooth disabled");
-      }
+    return new Promise((resolve, reject) => {
+      exec('sudo systemctl stop bluetooth', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+          reject({state: 'error', error: err})
+        } else{
+          console.log("[i] Bluetooth disabled");
+          resolve({state: 'disable'});
+        }
+      });
+    });
+  },
+  async getBluetoothState(){
+    return new Promise((resolve, reject) => {
+      console.log("[i] Starting script : getBluetoothState.sh");
+      let child = exec(process.cwd() + '/scripts/bluetooth/getBluetoothState.sh', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          console.log("[i] Script exited with no errors : getBluetoothState.sh");
+          if(stdout.toString().charAt(0) == "1") resolve("enable");
+          else if(stdout.toString().charAt(0) == "0") resolve("disable");
+          else resolve("error");
+        }
+      });
     });
   },
   async scanDevices(){
+    await this.removeDevices();
     return new Promise((resolve, reject) => {
       console.log("[i] Starting script : searchDevices.sh");
       let child = exec(process.cwd() + '/scripts/bluetooth/searchDevices.sh', (err, stdout, stderr) => {
@@ -41,13 +62,17 @@ export default {
     });
   },
   async removeDevices(){
-    console.log("[i] Starting script : removeDevices.sh");
-    exec(process.cwd() + '/scripts/bluetooth/removeDevices.sh', (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("[i] Script exited with no errors : removeDevices.sh");
-      }
+    return new Promise((resolve, reject) => {
+      console.log("[i] Starting script : removeDevices.sh");
+      exec(process.cwd() + '/scripts/bluetooth/removeDevices.sh', (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          console.log("[i] Script exited with no errors : removeDevices.sh");
+          resolve();
+        }
+      })
     })
   },
   async addDevice(mac_address){
@@ -57,6 +82,7 @@ export default {
         console.log(err);
       } else {
         console.log("[i] Script exited with no errors : addDevice.sh");
+        this.trustDevice(mac_address);
       }
     })
   },
@@ -67,17 +93,37 @@ export default {
           console.log(err);
           reject(err);
         }else{
-          resolve(stdout);
+          let lines = stdout.toString().split('\n');
+          lines.pop();
+          let devices = new Array();
+          lines.forEach((line) => {
+            devices.push({
+              macAddress: line.substr(7, 17),
+              name: line.substr(25, line.lenght)
+            });
+          });
+          resolve(devices);
         }
       })
     });
   },
-  test(){
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve("yeah");
-      }, 5000)
+  async trustDevice(mac_address){
+    exec('bluetoothctl trust ' + mac_address, (err, stdout, stderr) => {
+      if(err){
+        console.log(err);
+      }else{
+        console.log("[i] New device trusted");
+        this.connectDevice(mac_address)
+      }
+    })
+  },
+  async connectDevice(mac_address){
+    exec('bluetoothctl connect ' + mac_address, (err, stdout, stderr) => {
+      if(err){
+        console.log(err);
+      }else{
+        console.log("[i] New device connected");
+      }
     })
   }
 };
-

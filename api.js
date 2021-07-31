@@ -14,7 +14,6 @@ router.get('/sensors', async (req, res) => {
    const sensors = await Sensor.find();
    res.send(200, sensors);
 });
-
 router.post('/sensors', async (req, res) => {
    try{
       const sensor = new Sensor({
@@ -28,7 +27,6 @@ router.post('/sensors', async (req, res) => {
       res.send(500);
    }   
 });
-
 router.put('/sensors/:mac_address', async (req, res) => {
    let response = await Sensor.findOneAndUpdate(
       {macAddress: req.params.mac_address},
@@ -38,45 +36,40 @@ router.put('/sensors/:mac_address', async (req, res) => {
    console.log("[i] Sensor " + response.name + " value updated");
    res.sendStatus(200);
 });
-
 router.get('/sensors/:mac_address', async (req,res) => {
    const sensor = await Sensor.findOne({
       macAddress: req.params.mac_address
    })
    console.log(sensor);
    res.send(200, sensor);
-})
+});
+
+//BLUETOOTH
 
 router.get('/bluetooth/on', async(req, res) => {
-   btManager.enableBluetooth();
-   res.send(200);
-})
-
+   let state = await btManager.enableBluetooth();
+   res.send(200, state);
+});
 router.get('/bluetooth/off', async(req, res) => {
-   btManager.disableBluetooth();
-   res.send(200);
-})
-
+   let state = await btManager.disableBluetooth();
+   res.send(200, state);
+});
+router.get('/bluetooth/state', async(req, res) => {
+   let state = await btManager.getBluetoothState();
+   res.send(200, state);
+});
 router.get('/bluetooth/scan', async(req, res) => {
-   let rawDevicesList = await btManager.scanDevices();
-   console.log("attend stp :", rawDevicesList);
-   res.send(200);
-})
-
+   let devicesList = await btManager.scanDevices();
+   console.log("devices list :", devicesList);
+   res.send(200, devicesList);
+});
 router.get('/bluetooth/removeall', async(req, res) => {
    btManager.removeDevices();
    res.send(200);
-})
-
+});
 router.get('/bluetooth/pair/:mac_address', async(req, res) => {
    btManager.addDevice(req.params.mac_address);
    res.send(200);
-})
-
-router.get('/test', async(req, res) => {
-   let test = await btManager.test();
-   console.log(test);
-   res.send(200);
-})
+});
 
 export default router;
